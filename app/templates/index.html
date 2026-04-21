@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block main %}
+  {% if me %}
+    <form method="post" action="/post"
+          hx-post="/post" hx-target="#feed" hx-swap="afterbegin"
+          hx-on::after-request="this.reset()"
+          class="mb-6 bg-slate-800/50 rounded-xl p-4">
+      <textarea name="body" maxlength="280" rows="3" required
+                class="w-full bg-transparent resize-none outline-none placeholder-slate-500 text-lg"
+                placeholder="что на уме?"></textarea>
+      <div class="flex justify-between items-center">
+        <span class="text-slate-500 text-xs">до 280 символов</span>
+        <button class="bg-sky-500 hover:bg-sky-400 px-4 py-1.5 rounded-full text-sm font-semibold">
+          чирикнуть
+        </button>
+      </div>
+    </form>
+  {% else %}
+    <div class="mb-6 bg-slate-800/30 border border-slate-800 rounded-xl p-6 text-center text-slate-400">
+      <a href="/register" class="text-sky-400 hover:underline">зарегистрируйся</a>
+      или
+      <a href="/login" class="text-sky-400 hover:underline">войди</a>, чтобы чирикать
+    </div>
+  {% endif %}
+
+  <div id="feed" class="space-y-3">
+    {% for p in posts %}
+      {% with post = p, liked = (p.id in like_set) %}
+        {% include "_post.html" %}
+      {% endwith %}
+    {% endfor %}
+    {% if not posts %}
+      <p class="text-slate-500 text-center py-10">пока пусто. напиши первое.</p>
+    {% endif %}
+  </div>
+{% endblock %}

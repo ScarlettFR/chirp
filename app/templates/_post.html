@@ -1,0 +1,15 @@
+<article class="bg-slate-800/50 rounded-xl p-4 hover:bg-slate-800/70 transition-colors">
+  <div class="flex items-baseline gap-2 mb-1">
+    <a href="/@{{ post.author.username }}" class="font-semibold hover:underline">@{{ post.author.username }}</a>
+    <span class="text-slate-500 text-xs">{{ post.created_at.strftime('%d.%m %H:%M') }}</span>
+  </div>
+  <p class="whitespace-pre-wrap break-words mb-2">{{ post.body }}</p>
+  {% if me %}
+    <button hx-post="/post/{{ post.id }}/like" hx-target="this" hx-swap="outerHTML"
+            class="flex items-center gap-1 {% if liked %}text-pink-500{% else %}text-slate-400{% endif %} hover:text-pink-400 text-sm">
+      <span>{% if liked %}♥{% else %}♡{% endif %}</span><span>{{ post.likes|length }}</span>
+    </button>
+  {% else %}
+    <span class="text-slate-500 text-sm">♡ {{ post.likes|length }}</span>
+  {% endif %}
+</article>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}@{{ u.username }} · chirp{% endblock %}
+{% block main %}
+  <section class="bg-slate-800/50 rounded-xl p-5 mb-6">
+    <div class="flex items-start justify-between mb-2">
+      <div>
+        <h1 class="text-xl font-semibold">@{{ u.username }}</h1>
+        <p class="text-xs text-slate-500">с {{ u.created_at.strftime('%d.%m.%Y') }}</p>
+      </div>
+      {% if me and me.id != u.id %}
+        <form method="post" action="/@{{ u.username }}/follow">
+          <button class="px-4 py-1.5 rounded-full text-sm font-semibold
+                         {% if i_follow %}bg-slate-700 hover:bg-slate-600{% else %}bg-sky-500 hover:bg-sky-400{% endif %}">
+            {% if i_follow %}отписаться{% else %}подписаться{% endif %}
+          </button>
+        </form>
+      {% endif %}
+    </div>
+    {% if u.bio %}
+      <p class="text-slate-300 text-sm mb-2">{{ u.bio }}</p>
+    {% endif %}
+    <div class="flex gap-4 text-sm text-slate-400">
+      <span><b class="text-slate-200">{{ following }}</b> подписок</span>
+      <span><b class="text-slate-200">{{ followers }}</b> подписчиков</span>
+    </div>
+  </section>
+
+  <div class="space-y-3">
+    {% for p in posts %}
+      {% with post = p, liked = (p.id in like_set) %}
+        {% include "_post.html" %}
+      {% endwith %}
+    {% endfor %}
+    {% if not posts %}
+      <p class="text-slate-500 text-center py-10">ещё не чирикал</p>
+    {% endif %}
+  </div>
+{% endblock %}
