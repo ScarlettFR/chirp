@@ -40,3 +40,24 @@ Env:
   That's on purpose — the idea was to keep it small.
 - Tailwind is loaded from CDN to skip the build step. For production
   compile it down to a single CSS file.
+
+## deploy
+
+Simplest setup — a VPS with Caddy + systemd service running uvicorn.
+Env on the machine:
+
+```
+SECRET_KEY=<long random>
+DB_URL=postgresql+psycopg://user:pass@localhost/chirp
+```
+
+Caddy snippet:
+
+```
+chirp.example.com {
+    reverse_proxy 127.0.0.1:8000
+}
+```
+
+For something bigger — put it behind Gunicorn with `uvicorn.workers.UvicornWorker`
+and stick Redis in front for session storage.
